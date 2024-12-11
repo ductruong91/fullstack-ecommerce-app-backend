@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const { generalAccessToken, generalRefreshToken } = require("./jwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
@@ -59,20 +60,89 @@ const loginUser = (userLogin) => {
       }
       const comparePassword = bcrypt.compareSync(password, checkUser.password);
 
-      console.log("so sanh mk:", comparePassword);
+      // console.log("so sanh mk:", comparePassword);
 
-if (!comparePassword) {
-  resolve({
-    status: "ok",
-    message: "mk khong dung",
-  })
-}
+      if (!comparePassword) {
+        resolve({
+          status: "ok",
+          message: "mk khong dung",
+        });
+      }
+
+      const access_token = await generalAccessToken({
+        id: checkUser.id,
+        role: checkUser.role,
+      });
+
+      const refresh_token = await generalRefreshToken({
+        id: checkUser.id,
+        role: checkUser.role,
+      });
+
       resolve({
         status: "ok",
         message: "login success",
-        data: checkUser,
+        access_token,
+        refresh_token,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const updateUser = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUser = await User.findOne({
+        _id: id,
       });
 
+      // kiem tra xem id cos ton tai ng nao khong da ton taij chua
+      if (checkUser === null) {
+        resolve({
+          status: "ok",
+          message: " id khong ton tai",
+        });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+      //{new:true} tra ve doc sau khi cap nhat
+
+      resolve({
+        status: "ok",
+        message: "ud success",
+        data: updatedUser,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const deleteUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUser = await User.findOne({
+        _id: id,
+      });
+
+      // kiem tra xem id co ton tai ng nao khong da ton taij chua
+      if (checkUser === null) {
+        resolve({
+          status: "ok",
+          message: " id khong ton tai",
+        });
+      }
+
+// await User.findByIdAndDelete(id);
+      //{new:true} tra ve doc sau khi cap nhat
+
+      resolve({
+        status: "ok",
+        message: "delete user success",
+
+      });
     } catch (error) {
       reject(error);
     }
@@ -82,4 +152,6 @@ if (!comparePassword) {
 module.exports = {
   createUser,
   loginUser,
+  updateUser,
+  deleteUser,
 };

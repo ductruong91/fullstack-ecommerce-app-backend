@@ -33,15 +33,15 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    console.log(req.body); // Kiểm tra dữ liệu từ client
-    const { email, password, name } = req.body;
+    // console.log(req.body); // Kiểm tra dữ liệu từ client
+    const { email, password } = req.body;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isCheckEmail = emailRegex.test(email);
 
     // console.log("check email", isCheckEmail);
 
-    if (!email || !password || !name) {
+    if (!email || !password) {
       return res.status(400).json({
         status: "ERR",
         message: "Email, password, and name are required",
@@ -61,7 +61,56 @@ const loginUser = async (req, res) => {
     });
   }
 };
+
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id
+    console.log("userId:", userId);
+    
+    const data = req.body
+
+    if (!userId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "userid khong co trong duong dan",
+      });
+    }
+
+    const result = await UserService.updateUser(userId, data); // Gọi hàm và truyền req.body
+    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const token = req.headers
+
+    
+    
+    if (!userId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "userid khong co trong duong dan",
+      });
+    }
+
+    const result = await UserService.deleteUser(userId); // Gọi hàm và truyền req.body
+    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
+  updateUser,
+  deleteUser,
 };
