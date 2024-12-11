@@ -24,7 +24,7 @@ const createUser = (newUser) => {
       //tao user va dua vao trong databases
       const createdUser = await User.create({
         email,
-        password,
+        password: hash,
         name,
       });
 
@@ -42,6 +42,44 @@ const createUser = (newUser) => {
   });
 };
 
+const loginUser = (userLogin) => {
+  return new Promise(async (resolve, reject) => {
+    const { email, password, name } = userLogin;
+    try {
+      const checkUser = await User.findOne({
+        email: email,
+      });
+
+      // kiem tra xem email da ton taij chua
+      if (checkUser === null) {
+        resolve({
+          status: "ok",
+          message: " email khong ton tai",
+        });
+      }
+      const comparePassword = bcrypt.compareSync(password, checkUser.password);
+
+      console.log("so sanh mk:", comparePassword);
+
+if (!comparePassword) {
+  resolve({
+    status: "ok",
+    message: "mk khong dung",
+  })
+}
+      resolve({
+        status: "ok",
+        message: "login success",
+        data: checkUser,
+      });
+
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createUser,
+  loginUser,
 };
