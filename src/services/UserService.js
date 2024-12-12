@@ -135,13 +135,53 @@ const deleteUser = (id) => {
         });
       }
 
-// await User.findByIdAndDelete(id);
-      //{new:true} tra ve doc sau khi cap nhat
+      await User.findByIdAndDelete(id);
 
       resolve({
         status: "ok",
         message: "delete user success",
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
+const getAllUser = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allUser = await User.find();
+
+      resolve({
+        status: "ok",
+        message: "success",
+        data: allUser,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const getDetailUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({
+        _id: id,
+      });
+
+      // kiem tra xem id co ton tai ng nao khong da ton taij chua
+      if (user === null) {
+        resolve({
+          status: "ok",
+          message: " user is not dèine",
+        });
+      }
+
+      resolve({
+        status: "ok",
+        message: " success get data",
+        data: user,
       });
     } catch (error) {
       reject(error);
@@ -154,4 +194,6 @@ module.exports = {
   loginUser,
   updateUser,
   deleteUser,
+  getAllUser,
+  getDetailUser,
 };

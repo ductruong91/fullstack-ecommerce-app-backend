@@ -88,9 +88,6 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    const token = req.headers
-
-    
     
     if (!userId) {
       return res.status(200).json({
@@ -108,9 +105,43 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getAllUser = async (req, res) => {
+  try {
+
+    const result = await UserService.getAllUser(); 
+    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
+const getDetailUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    if (!userId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "userid not dèine",
+      });
+    }
+
+    const result = await UserService.getDetailUser(userId); // Gọi hàm và truyền 
+    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
   updateUser,
   deleteUser,
+  getAllUser,
+  getDetailUser,
 };
