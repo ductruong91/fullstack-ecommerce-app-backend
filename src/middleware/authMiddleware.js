@@ -61,7 +61,7 @@ const authOwnerMiddleware = async (req, res, next) => {
   const token = req.headers.token.split(" ")[1]; // Lấy token từ header
   const productId = req.params.id;
 
-  // 6. Tìm sản phẩm trong cơ sở dữ liệu để kiểm tra người dùng có phải là chủ sở hữu không
+  //Tìm sản phẩm trong cơ sở dữ liệu để kiểm tra người dùng có phải là chủ sở hữu không
   const product = await Product.findById(productId);
 
   // Kiểm tra nếu không tìm thấy sản phẩm
@@ -84,7 +84,7 @@ const authOwnerMiddleware = async (req, res, next) => {
       next();
     } else {
       return res.status(404).json({
-        message: "k phai admin || khong phai chu so huu",
+        message: "khong phai admin || khong phai chu so huu",
         status: "ERR",
       });
     }

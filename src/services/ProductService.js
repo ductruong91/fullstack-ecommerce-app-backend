@@ -118,7 +118,7 @@ const deleteProduct = (id) => {
         });
       }
 
-      await Product.findByIdAndDelete(id);
+    //   await Product.findByIdAndDelete(id);
 
       resolve({
         status: "ok",
