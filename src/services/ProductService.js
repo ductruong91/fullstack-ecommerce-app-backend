@@ -102,7 +102,6 @@ const detailProduct = (id) => {
   });
 };
 
-
 const deleteProduct = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -118,11 +117,45 @@ const deleteProduct = (id) => {
         });
       }
 
-    //   await Product.findByIdAndDelete(id);
+      //   await Product.findByIdAndDelete(id);
 
       resolve({
         status: "ok",
         message: "delete product success",
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const getAllProduct = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allProduct = await Product.find();
+
+      resolve({
+        status: "ok",
+        message: "success get all product",
+        data: allProduct,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const getUserProduct = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allProduct = await Product.find({
+        userId: id,
+      });
+
+      resolve({
+        status: "ok",
+        message: "success to get all your product",
+        data: allProduct,
       });
     } catch (error) {
       reject(error);
@@ -135,4 +168,6 @@ module.exports = {
   updateProduct,
   detailProduct,
   deleteProduct,
+  getAllProduct,
+  getUserProduct,
 };

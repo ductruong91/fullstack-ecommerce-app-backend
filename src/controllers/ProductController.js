@@ -17,7 +17,15 @@ const createProduct = async (req, res) => {
       rating,
     } = req.body;
 
-    if (!userId || !name || !description || !price || !type|| !images || !stock) {
+    if (
+      !userId ||
+      !name ||
+      !description ||
+      !price ||
+      !type ||
+      !images ||
+      !stock
+    ) {
       return res.status(400).json({
         status: "ERR",
         message: "input í not required",
@@ -25,7 +33,6 @@ const createProduct = async (req, res) => {
     }
     const response = await ProductService.createProduct(req.body);
     return res.status(200).json(response);
-
   } catch (error) {
     return res.status(404).json({
       message: error.message || "An error occurred", // Trả lỗi kèm thông báo
@@ -76,7 +83,6 @@ const detailProduct = async (req, res) => {
   }
 };
 
-
 const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;
@@ -97,9 +103,31 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const getAllProduct = async (req, res) => {
+  try {
+    const userRole = req.user.role; // Lấy role từ thông tin user trong request (được xác thực qua middleware)
+    let products;
+    if (userRole === "admin") {
+      // Nếu là admin, lấy tất cả sản phẩm
+      products = await ProductService.getAllProduct();
+    } else {
+      // Nếu là user, chỉ lấy sản phẩm của người dùng đó
+      const userId = req.user.id;
+      products = await ProductService.getUserProduct(userId);
+    }
+
+    return res.status(200).json(products); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
   detailProduct,
   deleteProduct,
+  getAllProduct,
 };

@@ -91,8 +91,31 @@ const authOwnerMiddleware = async (req, res, next) => {
   });
 };
 
+//xac thuc xem la ai(admin hay user và truyen tra lại trong req)
+//chi dung de get all product
+const authUserOrAdminMiddleware = async (req, res, next) => {
+  try {
+    const token = req.headers.token.split(" ")[1]; // Lấy token từ header
+
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    // Giải mã token để lấy thông tin người dùng
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
+    req.user = decoded.payload; // Lưu thông tin người dùng vào request
+
+    next();
+  } catch (error) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized, please provide a valid token" });
+  }
+};
+
 module.exports = {
   authMiddleware,
   authUserMiddleware,
   authOwnerMiddleware,
+  authUserOrAdminMiddleware,
 };
