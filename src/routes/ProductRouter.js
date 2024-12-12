@@ -4,7 +4,7 @@ const ProductController = require('../controllers/ProductController');
 const {
   authUserMiddleware,
   authOwnerMiddleware,
-  authUserOrAdminMiddleware,
+  getUserIdMiddleware,
 } = require("../middleware/authMiddleware");
 
 
@@ -12,7 +12,8 @@ router.post("/create", ProductController.createProduct);
 router.put("/update/:id", ProductController.updateProduct);
 router.get("/detail/:id", ProductController.detailProduct);
 router.delete("/delete/:id",authOwnerMiddleware , ProductController.deleteProduct);
-//get all for all user: admin: all, user: user's product
-router.get("/get-all-product",authUserOrAdminMiddleware, ProductController.getAllProduct);
+
+router.get("/get-all-product", ProductController.getAllProduct);
+router.get("/get-user-product",getUserIdMiddleware, ProductController.getUserProduct);
 
 module.exports = router;

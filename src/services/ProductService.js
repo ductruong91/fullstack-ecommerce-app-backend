@@ -129,15 +129,43 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = () => {
+const getAllProduct = (limit = 8, page = 0, sort) => {
+  console.log("sort", sort);
   return new Promise(async (resolve, reject) => {
     try {
-      const allProduct = await Product.find();
+      const totalProduct = await Product.countDocuments();
+      if (sort) {
+        console.log("okk");
+        const objectSort = {};
+        objectSort[sort[1]] = sort[0];
+        console.log("objectSort:", objectSort);
+
+        const allProduct = await Product.find()
+          .limit(limit)
+          .skip(page * limit)
+          .sort(objectSort);
+
+        resolve({
+          status: "ok",
+          message: "success get all product",
+          data: allProduct,
+          total: totalProduct,
+          currentPage: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+
+      const allProduct = await Product.find()
+        .limit(limit)
+        .skip(page * limit);
 
       resolve({
         status: "ok",
         message: "success get all product",
         data: allProduct,
+        total: totalProduct,
+        currentPage: Number(page + 1),
+        totalPage: Math.ceil(totalProduct / limit),
       });
     } catch (error) {
       reject(error);
@@ -145,17 +173,25 @@ const getAllProduct = () => {
   });
 };
 
-const getUserProduct = (id) => {
+const getUserProduct = (id, limit = 8, page = 0) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const allProduct = await Product.find({
+      const totalProduct = await Product.countDocuments({
         userId: id,
       });
+      const allProduct = await Product.find({
+        userId: id,
+      })
+        .limit(limit)
+        .skip(page * limit);
 
       resolve({
         status: "ok",
         message: "success to get all your product",
         data: allProduct,
+        total: totalProduct,
+        currentPage: Number(page + 1),
+        totalPage: Math.ceil(totalProduct / limit),
       });
     } catch (error) {
       reject(error);

@@ -105,16 +105,34 @@ const deleteProduct = async (req, res) => {
 
 const getAllProduct = async (req, res) => {
   try {
-    const userRole = req.user.role; // Lấy role từ thông tin user trong request (được xác thực qua middleware)
+    const { limit, page, sort } = req.query;
+    const products = await ProductService.getAllProduct(
+      Number(limit)||8,
+      Number(page)||0,
+      sort
+    );
+
+    return res.status(200).json(products); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
+const getUserProduct = async (req, res) => {
+  try {
+    const { limit, page } = req.query;
+
+    // Lấy role từ thông tin user trong request (được xác thực qua middleware)
+    const userId = req.user.id;
+
     let products;
-    if (userRole === "admin") {
-      // Nếu là admin, lấy tất cả sản phẩm
-      products = await ProductService.getAllProduct();
-    } else {
-      // Nếu là user, chỉ lấy sản phẩm của người dùng đó
-      const userId = req.user.id;
-      products = await ProductService.getUserProduct(userId);
-    }
+    products = await ProductService.getUserProduct(
+      userId,
+      Number(limit)||8,
+      Number(page)||0
+    );
 
     return res.status(200).json(products); // Gửi phản hồi với status 200 và dữ liệu trả về
   } catch (error) {
@@ -130,4 +148,5 @@ module.exports = {
   detailProduct,
   deleteProduct,
   getAllProduct,
+  getUserProduct,
 };
