@@ -1,6 +1,6 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-const { generalAccessToken, generalRefreshToken } = require("./jwtService");
+const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
@@ -135,7 +135,7 @@ const deleteUser = (id) => {
         });
       }
 
-      await User.findByIdAndDelete(id);
+      // await User.findByIdAndDelete(id);
 
       resolve({
         status: "ok",

@@ -1,4 +1,5 @@
 const UserService = require("../services/UserService");
+const JwtService = require("../services/JwtService");
 
 const createUser = async (req, res) => {
   try {
@@ -64,10 +65,10 @@ const loginUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const userId = req.params.id
+    const userId = req.params.id;
     console.log("userId:", userId);
-    
-    const data = req.body
+
+    const data = req.body;
 
     if (!userId) {
       return res.status(200).json({
@@ -88,7 +89,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    
+
     if (!userId) {
       return res.status(200).json({
         status: "ERR",
@@ -107,8 +108,7 @@ const deleteUser = async (req, res) => {
 
 const getAllUser = async (req, res) => {
   try {
-
-    const result = await UserService.getAllUser(); 
+    const result = await UserService.getAllUser();
     return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
   } catch (error) {
     return res.status(404).json({
@@ -128,7 +128,27 @@ const getDetailUser = async (req, res) => {
       });
     }
 
-    const result = await UserService.getDetailUser(userId); // Gọi hàm và truyền 
+    const result = await UserService.getDetailUser(userId); // Gọi hàm và truyền
+    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
+const refreshToken = async (req, res) => {
+  try {
+    const token = req.headers.token.split(" ")[1];
+
+    if (!token) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "token not required",
+      });
+    }
+
+    const result = await JwtService.refreshTokenService(token); // Gọi hàm và truyền
     return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
   } catch (error) {
     return res.status(404).json({
@@ -144,4 +164,5 @@ module.exports = {
   deleteUser,
   getAllUser,
   getDetailUser,
+  refreshToken,
 };
