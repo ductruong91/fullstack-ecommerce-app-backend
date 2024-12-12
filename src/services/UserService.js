@@ -135,7 +135,7 @@ const deleteUser = (id) => {
         });
       }
 
-      // await User.findByIdAndDelete(id);
+      await User.findByIdAndDelete(id);
 
       resolve({
         status: "ok",
