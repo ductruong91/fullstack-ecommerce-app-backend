@@ -105,11 +105,12 @@ const deleteProduct = async (req, res) => {
 
 const getAllProduct = async (req, res) => {
   try {
-    const { limit, page, sort } = req.query;
+    const { limit, page, sort, filter } = req.query;
     const products = await ProductService.getAllProduct(
-      Number(limit)||8,
-      Number(page)||0,
-      sort
+      Number(limit) || 8,
+      Number(page) || 0,
+      sort,
+      filter
     );
 
     return res.status(200).json(products); // Gửi phản hồi với status 200 và dữ liệu trả về
@@ -130,8 +131,8 @@ const getUserProduct = async (req, res) => {
     let products;
     products = await ProductService.getUserProduct(
       userId,
-      Number(limit)||8,
-      Number(page)||0
+      Number(limit) || 8,
+      Number(page) || 0
     );
 
     return res.status(200).json(products); // Gửi phản hồi với status 200 và dữ liệu trả về

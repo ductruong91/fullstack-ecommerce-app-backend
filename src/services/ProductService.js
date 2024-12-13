@@ -129,17 +129,43 @@ const deleteProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit = 8, page = 0, sort) => {
-  console.log("sort", sort);
+const getAllProduct = (limit = 8, page = 0, sort, filter) => {
+  console.log("filter", filter);
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.countDocuments();
+      //neu co filter
+      if (filter) {
+        console.log("okk");
+        const label = filter[0];
+        const totalProductFilter = await Product.countDocuments({
+          [label]: { $regex: filter[1], $options: "i" },
+        });
+
+        const allProductFilter = await Product.find({
+          [label]: { $regex: filter[1], $options: "i" },
+        })
+          .limit(limit)
+          .skip(page * limit);
+
+        resolve({
+          status: "ok",
+          message: "success get all product",
+          data: allProductFilter,
+          total: totalProductFilter,
+          currentPage: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+
+      //neu co sort
       if (sort) {
         console.log("okk");
         const objectSort = {};
         objectSort[sort[1]] = sort[0];
         console.log("objectSort:", objectSort);
 
+        
         const allProduct = await Product.find()
           .limit(limit)
           .skip(page * limit)
