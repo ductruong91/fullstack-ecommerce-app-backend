@@ -4,7 +4,7 @@ const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { email, password, name } = newUser;
+    const { email, password,   } = newUser;
     try {
       const checkUser = await User.findOne({
         email: email,
@@ -13,7 +13,7 @@ const createUser = (newUser) => {
       // kiem tra xem email da ton taij chua
       if (checkUser !== null) {
         resolve({
-          status: "ok",
+          status: "ERR",
           message: " email da ton tai",
         });
       }
@@ -26,7 +26,6 @@ const createUser = (newUser) => {
       const createdUser = await User.create({
         email,
         password: hash,
-        name,
       });
 
       //tra ket qua
@@ -45,7 +44,7 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
   return new Promise(async (resolve, reject) => {
-    const { email, password, name } = userLogin;
+    const { email, password } = userLogin;
     try {
       const checkUser = await User.findOne({
         email: email,
