@@ -67,15 +67,19 @@ const loginUser = (userLogin) => {
           message: " mk khong dung",
         });
       }
+      // Nếu không có name, gán name là "unknown"
+      const userName = checkUser.name || "unknown";
 
       const access_token = await generalAccessToken({
         id: checkUser.id,
         role: checkUser.role,
+        name: userName,
       });
 
       const refresh_token = await generalRefreshToken({
         id: checkUser.id,
         role: checkUser.role,
+        name: userName,
       });
 
       resolve({

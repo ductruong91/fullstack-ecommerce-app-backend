@@ -17,9 +17,7 @@ const authMiddleware = (req, res, next) => {
     }
     //neu token hop le thì user se chua payload cua token
 
-    const { payload } = user;
-
-    if (payload?.role === "admin") {
+    if (user?.role === "admin") {
       next();
     } else {
       return res.status(404).json({
@@ -32,20 +30,21 @@ const authMiddleware = (req, res, next) => {
 
 //xac thuc ng dung (nguoi yeu cau voi ng duoc yeu cau co phai la1 khi yeu cau tt ng dung)
 const authUserMiddleware = (req, res, next) => {
+  // console.log("req.header", req.headers);
+
   const token = req.headers.token.split(" ")[1]; // Lấy token từ header
   const userId = req.params.id;
   jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
     if (err) {
-      return res.status(404).json({
-        message: "the authentication",
+      return res.status(200).json({
+        message: "the authentication day",
         status: "ERR",
       });
     }
     //neu token hop le thì user se chua payload cua token
 
-    const { payload } = user;
     //neu là admin hoặc người dùng và người được yêu cầu là 1
-    if (payload?.role === "admin" || payload?.id === userId) {
+    if (user?.role === "admin" || user?.id === userId) {
       next();
     } else {
       return res.status(404).json({

@@ -62,8 +62,9 @@ const loginUser = async (req, res) => {
     const result = await UserService.loginUser(req.body); // Gọi hàm và truyền req.body
     const { refresh_token, ...newResponse } = result;
     res.cookie("refresh_token", refresh_token, {
-      HttpOnly: true,
-      Secure: true,
+      httpOnly: true,
+      secure: false,
+      samesite: "strict",
     });
 
     return res.status(200).json(newResponse); // Gửi phản hồi với status 200 và dữ liệu trả về
@@ -147,21 +148,20 @@ const getDetailUser = async (req, res) => {
 };
 
 const refreshToken = async (req, res) => {
-  console.log("req cookie:", req.cookies);
+  // console.log("req cookie:", req.cookies);
 
   try {
-    // const token = req.headers.token.split(" ")[1];
+    const token = req.cookies.refresh_token;
 
-    // if (!token) {
-    //   return res.status(200).json({
-    //     status: "ERR",
-    //     message: "token not required",
-    //   });
-    // }
+    if (!token) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "token not required",
+      });
+    }
 
-    // const result = await JwtService.refreshTokenService(token); // Gọi hàm và truyền
-    // return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
-    return;
+    const result = await JwtService.refreshTokenService(token); // Gọi hàm và truyền
+    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
   } catch (error) {
     return res.status(404).json({
       message: error.message || "An error occurred", // Trả lỗi kèm thông báo
@@ -169,6 +169,22 @@ const refreshToken = async (req, res) => {
   }
 };
 
+
+const logoutUser = async (req, res) => {
+  // console.log("req cookie:", req.cookies);
+
+  try {
+    res.clearCookie('refresh_token')
+     return res.status(200).json({
+      status: 'oke',
+      message: 'log out'
+     }); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
 module.exports = {
   createUser,
   loginUser,
@@ -177,4 +193,5 @@ module.exports = {
   getAllUser,
   getDetailUser,
   refreshToken,
+  logoutUser,
 };
