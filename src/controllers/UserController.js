@@ -60,7 +60,13 @@ const loginUser = async (req, res) => {
     }
 
     const result = await UserService.loginUser(req.body); // Gọi hàm và truyền req.body
-    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+    const { refresh_token, ...newResponse } = result;
+    res.cookie("refresh_token", refresh_token, {
+      HttpOnly: true,
+      Secure: true,
+    });
+
+    return res.status(200).json(newResponse); // Gửi phản hồi với status 200 và dữ liệu trả về
   } catch (error) {
     return res.status(404).json({
       message: error.message || "An error occurred", // Trả lỗi kèm thông báo
@@ -141,18 +147,21 @@ const getDetailUser = async (req, res) => {
 };
 
 const refreshToken = async (req, res) => {
+  console.log("req cookie:", req.cookies);
+
   try {
-    const token = req.headers.token.split(" ")[1];
+    // const token = req.headers.token.split(" ")[1];
 
-    if (!token) {
-      return res.status(200).json({
-        status: "ERR",
-        message: "token not required",
-      });
-    }
+    // if (!token) {
+    //   return res.status(200).json({
+    //     status: "ERR",
+    //     message: "token not required",
+    //   });
+    // }
 
-    const result = await JwtService.refreshTokenService(token); // Gọi hàm và truyền
-    return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+    // const result = await JwtService.refreshTokenService(token); // Gọi hàm và truyền
+    // return res.status(200).json(result); // Gửi phản hồi với status 200 và dữ liệu trả về
+    return;
   } catch (error) {
     return res.status(404).json({
       message: error.message || "An error occurred", // Trả lỗi kèm thông báo

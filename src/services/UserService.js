@@ -4,7 +4,7 @@ const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { email, password,   } = newUser;
+    const { email, password } = newUser;
     try {
       const checkUser = await User.findOne({
         email: email,
@@ -31,7 +31,7 @@ const createUser = (newUser) => {
       //tra ket qua
       if (createdUser) {
         resolve({
-          status: "ok",
+          status: "success",
           message: "success",
           data: createdUser,
         });
@@ -53,7 +53,7 @@ const loginUser = (userLogin) => {
       // kiem tra xem email da ton taij chua
       if (checkUser === null) {
         resolve({
-          status: "ok",
+          status: "ERR",
           message: " email khong ton tai",
         });
       }
@@ -63,8 +63,8 @@ const loginUser = (userLogin) => {
 
       if (!comparePassword) {
         resolve({
-          status: "ok",
-          message: "mk khong dung",
+          status: "ERR",
+          message: " mk khong dung",
         });
       }
 
@@ -79,7 +79,7 @@ const loginUser = (userLogin) => {
       });
 
       resolve({
-        status: "ok",
+        status: "success",
         message: "login success",
         access_token,
         refresh_token,
@@ -100,7 +100,7 @@ const updateUser = (id, data) => {
       // kiem tra xem id cos ton tai ng nao khong da ton taij chua
       if (checkUser === null) {
         resolve({
-          status: "ok",
+          status: "error",
           message: " id khong ton tai",
         });
       }
@@ -109,7 +109,7 @@ const updateUser = (id, data) => {
       //{new:true} tra ve doc sau khi cap nhat
 
       resolve({
-        status: "ok",
+        status: "success",
         message: "ud success",
         data: updatedUser,
       });
