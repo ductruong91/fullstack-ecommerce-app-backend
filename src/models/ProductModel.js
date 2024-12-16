@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema(
     sold: { type: Number, default: 0 }, // Số lượng đã bán
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }], // Tham chiếu đến review
     rating: { type: Number, required: true },
+    address:{type: String}
   },
   { timestamps: true }
 );
