@@ -3,7 +3,7 @@ const JwtService = require("../services/JwtService");
 
 const createUser = async (req, res) => {
   try {
-    console.log(req.body); // Kiểm tra dữ liệu từ client
+    // console.log(req.body); // Kiểm tra dữ liệu từ client
     const { email, password, confirmPassword } = req.body;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -169,16 +169,15 @@ const refreshToken = async (req, res) => {
   }
 };
 
-
 const logoutUser = async (req, res) => {
   // console.log("req cookie:", req.cookies);
 
   try {
-    res.clearCookie('refresh_token')
-     return res.status(200).json({
-      status: 'oke',
-      message: 'log out'
-     }); // Gửi phản hồi với status 200 và dữ liệu trả về
+    res.clearCookie("refresh_token");
+    return res.status(200).json({
+      status: "oke",
+      message: "log out",
+    }); // Gửi phản hồi với status 200 và dữ liệu trả về
   } catch (error) {
     return res.status(404).json({
       message: error.message || "An error occurred", // Trả lỗi kèm thông báo

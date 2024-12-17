@@ -4,7 +4,7 @@ const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { email, password } = newUser;
+    const { email, password, role, address, avatar, phone, name } = newUser;
     try {
       const checkUser = await User.findOne({
         email: email,
@@ -20,12 +20,17 @@ const createUser = (newUser) => {
       const saltRounds = 10; // Số vòng salt
 
       const hash = bcrypt.hashSync(password, saltRounds);
-      console.log("hash", hash);
+      // console.log("hash", hash);
 
       //tao user va dua vao trong databases
       const createdUser = await User.create({
         email,
         password: hash,
+        role,
+        address,
+        avatar,
+        phone,
+        name,
       });
 
       //tra ket qua

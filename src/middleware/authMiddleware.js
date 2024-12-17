@@ -11,7 +11,7 @@ const authMiddleware = (req, res, next) => {
   jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
     if (err) {
       return res.status(404).json({
-        message: "the authentication",
+        message: "the authentication(khong doc dc token)||het han dang nhap",
         status: "ERR",
       });
     }
@@ -77,9 +77,8 @@ const authOwnerMiddleware = async (req, res, next) => {
     }
     //neu token hop le thì user se chua payload cua token
 
-    const { payload } = user;
     //neu là admin hoặc người dùng và người được yêu cầu là 1
-    if (payload?.role === "admin" || payload?.userId === product.userId) {
+    if (user?.role === "admin" || user?.id === product.userId) {
       next();
     } else {
       return res.status(404).json({

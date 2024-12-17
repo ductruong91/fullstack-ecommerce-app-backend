@@ -117,7 +117,7 @@ const deleteProduct = (id) => {
         });
       }
 
-      //   await Product.findByIdAndDelete(id);
+      await Product.findByIdAndDelete(id);
 
       resolve({
         status: "ok",
@@ -165,7 +165,6 @@ const getAllProduct = (limit = 8, page = 0, sort, filter) => {
         objectSort[sort[1]] = sort[0];
         console.log("objectSort:", objectSort);
 
-        
         const allProduct = await Product.find()
           .limit(limit)
           .skip(page * limit)
