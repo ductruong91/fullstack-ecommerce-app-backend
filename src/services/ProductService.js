@@ -15,10 +15,10 @@ const createProduct = (newProduct) => {
       sold,
       reviews,
       rating,
+      owner,
     } = newProduct;
 
     try {
-      //tao user va dua vao trong databases
       const newProduct = await Product.create({
         userId,
         name,
@@ -30,6 +30,7 @@ const createProduct = (newProduct) => {
         sold,
         reviews,
         rating,
+        owner,
       });
 
       //tra ket qua
@@ -134,17 +135,16 @@ const getAllProduct = (limit = 8, page = 0, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.countDocuments();
-      //neu co filter
-      if (filter) {
-        console.log("okk");
-        const label = filter[0];
-        const totalProductFilter = await Product.countDocuments({
-          [label]: { $regex: filter[1], $options: "i" },
-        });
+      const queryFilter = {};
+      // Xử lý filter mảng chứa các object
+      if (Array.isArray(filter) && filter.length > 0) {
+        for (let i = 0; i < filter.length; i++) {
+          const element = filter[i];
+          queryFilter[element.key] = { $regex: element.value, $options: "i" }; // Thêm regex không phân biệt hoa thường
+        }
 
-        const allProductFilter = await Product.find({
-          [label]: { $regex: filter[1], $options: "i" },
-        })
+        const totalProductFilter = await Product.countDocuments(queryFilter);
+        const allProductFilter = await Product.find(queryFilter)
           .limit(limit)
           .skip(page * limit);
 

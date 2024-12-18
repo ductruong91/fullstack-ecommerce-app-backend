@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     address: { type: String },
     avatar: { type: String }, // Link ảnh đại diện
     role: { type: String, enum: ["user", "admin"], default: "user" }, // Phân quyền
+    rating:{type: Number}
   },
   {
     timestamps: true,

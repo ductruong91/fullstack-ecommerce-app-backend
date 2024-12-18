@@ -15,6 +15,7 @@ const createProduct = async (req, res) => {
       sold,
       reviews,
       rating,
+      owner,
     } = req.body;
 
     if (
@@ -106,6 +107,19 @@ const deleteProduct = async (req, res) => {
 const getAllProduct = async (req, res) => {
   try {
     const { limit, page, sort, filter } = req.query;
+    console.log("filter", filter);
+
+    let filterObject = {};
+
+    // Chuyển filter mảng thành object
+    if (Array.isArray(filter) && filter.length % 2 === 0) {
+      for (let i = 0; i < filter.length; i += 2) {
+        const key = filter[i];
+        const value = filter[i + 1];
+        filterObject[key] = value;
+      }
+    }
+
     const products = await ProductService.getAllProduct(
       Number(limit) || 8,
       Number(page) || 0,
@@ -124,9 +138,8 @@ const getAllProduct = async (req, res) => {
 const getUserProduct = async (req, res) => {
   try {
     const { limit, page } = req.query;
-
-    // Lấy role từ thông tin user trong request (được xác thực qua middleware)
-    const userId = req.user.id;
+    const userId = req.params.id;
+    console.log("useID", userId);
 
     let products;
     products = await ProductService.getUserProduct(
