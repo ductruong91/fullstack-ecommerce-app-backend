@@ -67,6 +67,7 @@ const authOwnerMiddleware = async (req, res, next) => {
   if (!product) {
     return res.status(404).json({ message: "Product not found" });
   }
+  console.log("chu", product.userId);
 
   jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
     if (err) {
@@ -76,9 +77,10 @@ const authOwnerMiddleware = async (req, res, next) => {
       });
     }
     //neu token hop le thì user se chua payload cua token
+    console.log("nguoi yeu cau", user.id);
 
     //neu là admin hoặc người dùng và người được yêu cầu là 1
-    if (user?.role === "admin" || user?.id === product.userId) {
+    if (user?.role === "admin" || user?.id === String(product.userId)) {
       next();
     } else {
       return res.status(404).json({
