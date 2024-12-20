@@ -107,7 +107,7 @@ const getBuyUserOrders = async (req, res) => {
 const getSellUserOrders = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log("useID", userId);
+    console.log("useID sell", userId);
 
     let orders;
     orders = await OrderService.getSellUserOrders(userId);
