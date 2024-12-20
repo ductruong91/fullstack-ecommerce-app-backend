@@ -206,9 +206,9 @@ const getUserProduct = (id, limit = 8, page = 0) => {
       });
       const allProduct = await Product.find({
         userId: id,
-      })
-        .limit(limit)
-        .skip(page * limit);
+      });
+      // .limit(limit)
+      // .skip(page * limit);
 
       resolve({
         status: "ok",
@@ -224,6 +224,24 @@ const getUserProduct = (id, limit = 8, page = 0) => {
   });
 };
 
+const getAllProductForAdmin = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const totalProduct = await Product.countDocuments();
+      const allProduct = await Product.find();
+
+      resolve({
+        status: "ok",
+        message: "success get all product",
+        data: allProduct,
+        total: totalProduct,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -231,4 +249,5 @@ module.exports = {
   deleteProduct,
   getAllProduct,
   getUserProduct,
+  getAllProductForAdmin,
 };

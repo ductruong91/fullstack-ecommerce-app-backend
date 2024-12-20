@@ -13,6 +13,7 @@ router.get("/detail/:id", ProductController.detailProduct);
 router.delete("/delete/:id", ProductController.deleteProduct);
 
 router.get("/get-all-product", ProductController.getAllProduct);
+router.get("/get-all-product-admin", ProductController.getAllProductForAdmin);
 router.get("/get-user-product/:id", ProductController.getUserProduct);
 
 module.exports = router;

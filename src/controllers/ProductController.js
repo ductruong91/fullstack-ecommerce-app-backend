@@ -156,6 +156,18 @@ const getUserProduct = async (req, res) => {
   }
 };
 
+const getAllProductForAdmin = async (req, res) => {
+  try {
+    const products = await ProductService.getAllProductForAdmin();
+
+    return res.status(200).json(products); // Gửi phản hồi với status 200 và dữ liệu trả về
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message || "An error occurred", // Trả lỗi kèm thông báo
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -163,4 +175,5 @@ module.exports = {
   deleteProduct,
   getAllProduct,
   getUserProduct,
+  getAllProductForAdmin,
 };
