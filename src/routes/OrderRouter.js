@@ -18,5 +18,8 @@ router.delete("/delete/:id", authMiddleware, OrderController.deleteOrderById);
 router.get("/get-all-order", OrderController.getAllOrders);
 router.get("/get-buy-user-order/:id", OrderController.getBuyUserOrders);
 router.get("/get-sell-user-order/:id", OrderController.getSellUserOrders);
+router.get("/get-all-order-populate", OrderController.getAllOrdersPopulate);
+
+
 
 module.exports = router;

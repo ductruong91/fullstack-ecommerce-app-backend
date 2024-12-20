@@ -169,6 +169,28 @@ const getSellUserOrders = (id) => {
   });
 };
 
+const getAllOrdersPopulate = () => {
+  // console.log("filter", filter);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const totalOrder = await Order.countDocuments();
+
+      const allOrder = await Order.find()
+        .populate("buyerId") // Lấy thông tin buyer
+        .populate("sellerId"); // Lấy thông tin seller;
+
+      resolve({
+        status: "ok",
+        message: "success get all order",
+        data: allOrder,
+        total: totalOrder,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createOrder,
   updateOrderById,
@@ -177,4 +199,5 @@ module.exports = {
   getAllOrders,
   getBuyUserOrders,
   getSellUserOrders,
+  getAllOrdersPopulate,
 };
