@@ -181,6 +181,7 @@ const getAllProduct = (limit = 8, page = 0, sort, filter) => {
       }
 
       const allProduct = await Product.find()
+        .sort({ createdAt: -1 })
         .limit(limit)
         .skip(page * limit);
 
