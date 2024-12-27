@@ -1,5 +1,5 @@
 const Order = require("../models/OrderModel");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 
 const createOrder = (newOrder) => {
