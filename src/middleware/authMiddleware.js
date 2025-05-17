@@ -16,6 +16,7 @@ const authMiddleware = (req, res, next) => {
       });
     }
     //neu token hop le thì user se chua payload cua token
+    //
 
     if (user?.role === "admin") {
       next();
